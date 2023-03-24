@@ -1,0 +1,6 @@
+# Data
+datasets/
+
+# Python
+.ipynb_checkpoints/
+.python-version
