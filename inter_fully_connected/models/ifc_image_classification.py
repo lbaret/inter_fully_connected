@@ -21,7 +21,7 @@ class IFCImageClassification(pl.LightningModule):
         return self.ifc(x)
     
     def configure_optimizers(self) -> torch.optim.Adam:
-        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
+        optimizer = torch.optim.Adam(self.parameters(), lr=1e-2)
         return optimizer
     
     def training_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:

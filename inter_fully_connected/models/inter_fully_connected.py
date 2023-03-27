@@ -9,6 +9,7 @@ class InterFullyConnected(nn.Module):
         
         self.outputs_dim = int(features_size * hidden_multiplicator)
         self.linear = nn.Linear(in_features=self.outputs_dim, out_features=self.outputs_dim)
+        self.batch_norm = nn.BatchNorm1d(num_features=self.outputs_dim)
         self.score_mapper = nn.Linear(in_features=self.outputs_dim, out_features=class_number)
 
         self.completer = nn.Parameter(torch.zeros(size=(1, self.outputs_dim - features_size)))
@@ -17,6 +18,7 @@ class InterFullyConnected(nn.Module):
         y = torch.concat([x, self.completer.repeat(x.shape[0], 1)], dim=1)
         y = self.linear(y)
         y = F.relu(y)
+        y = self.batch_norm(y)
         y = self.score_mapper(y)
 
         return y
