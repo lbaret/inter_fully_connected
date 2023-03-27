@@ -31,7 +31,7 @@ class IFCImageClassification(pl.LightningModule):
         scores = self.forward(inp_imgs)
         loss = self.loss_function(scores, tgts)
 
-        self.log("train_loss", loss)
+        self.log("train_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
         return loss
 
     def validation_step(self, batch: torch.Tensor, batch_idx: int) -> None:
@@ -41,7 +41,7 @@ class IFCImageClassification(pl.LightningModule):
         scores = self.forward(inp_imgs)
         loss = self.loss_function(scores, tgts)
 
-        self.log("valid_loss", loss)
+        self.log("valid_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
 
     def test_step(self, batch: torch.Tensor, batch_idx: int) -> None:
         imgs, tgts = batch
@@ -50,7 +50,7 @@ class IFCImageClassification(pl.LightningModule):
         scores = self.forward(inp_imgs)
         loss = self.loss_function(scores, tgts)
 
-        self.log("test_loss", loss)
+        self.log("test_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
     
     def predict_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
         imgs, tgts = batch

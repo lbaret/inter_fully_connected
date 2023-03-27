@@ -1,5 +1,6 @@
 # Data
 datasets/
+checkpoints/
 
 # Python
 .ipynb_checkpoints/
