@@ -8,8 +8,11 @@ from inter_fully_connected.models.inter_fully_connected import \
 
 
 class IFCImageClassification(pl.LightningModule):
-    def __init__(self, features_size: int, class_number: int, hidden_multiplicator: float=2, *args, **kwargs) -> None:
+    def __init__(self, features_size: int, class_number: int, learning_rate: float,
+                 hidden_multiplicator: float=2, *args, **kwargs) -> None:
         super(IFCImageClassification, self).__init__(*args, **kwargs)
+
+        self.learning_rate = learning_rate
 
         self.ifc = InterFullyConnected(features_size, class_number, hidden_multiplicator)
 
@@ -21,7 +24,7 @@ class IFCImageClassification(pl.LightningModule):
         return self.ifc(x)
     
     def configure_optimizers(self) -> torch.optim.Adam:
-        optimizer = torch.optim.Adam(self.parameters(), lr=1e-2)
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
         return optimizer
     
     def training_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:

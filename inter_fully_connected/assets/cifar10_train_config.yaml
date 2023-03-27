@@ -1,0 +1,11 @@
+optimizer: "Adam"
+optimizer_params:
+  learning_rate: 0.01
+
+scheduler: null
+scheduler_params: null
+
+batch_size: 32
+train_ratio: 0.8
+valid_ratio: 0.1
+epochs: 100

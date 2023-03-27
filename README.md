@@ -38,3 +38,9 @@ poetry run ifc train-cifar10 --help
 * *--train-ratio* : Data splitting, ratio for training set.
 * *--valid-ratio* : Data splitting, ratio for validation set.
 * *--ifc-multiplicator* : Model hyperparameter.
+
+## Future changes
+
+1. Integrate model changes with configuration file, which is better than too much command arguments
+2. Mecanism to automatically add Scheduler and Optimizer
+   1.  Create base model module and add overridable methods to fetch the right optimizer/scheduler module from torch
