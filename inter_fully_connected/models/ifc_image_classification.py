@@ -2,6 +2,7 @@ import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torchmetrics import Accuracy
 
 from inter_fully_connected.models.inter_fully_connected import \
     InterFullyConnected
@@ -18,13 +19,14 @@ class IFCImageClassification(pl.LightningModule):
 
         self.loss_function = nn.CrossEntropyLoss()
 
+        self.accuracy_function = Accuracy(task='multiclass', num_classes=class_number)
         self.save_hyperparameters()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.ifc(x)
     
     def configure_optimizers(self) -> torch.optim.Adam:
-        optimizer = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.learning_rate, weight_decay=0.1)
         return optimizer
     
     def training_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
@@ -34,7 +36,10 @@ class IFCImageClassification(pl.LightningModule):
         scores = self.forward(inp_imgs)
         loss = self.loss_function(scores, tgts)
 
+        accuracy = self.accuracy_function(torch.argmax(scores, 1), tgts)
+
         self.log("train_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train_accuracy", accuracy, on_step=False, on_epoch=True, prog_bar=True)
         return loss
 
     def validation_step(self, batch: torch.Tensor, batch_idx: int) -> None:
@@ -44,7 +49,10 @@ class IFCImageClassification(pl.LightningModule):
         scores = self.forward(inp_imgs)
         loss = self.loss_function(scores, tgts)
 
+        accuracy = self.accuracy_function(torch.argmax(scores, 1), tgts)
+
         self.log("valid_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("valid_accuracy", accuracy, on_step=False, on_epoch=True, prog_bar=True)
 
     def test_step(self, batch: torch.Tensor, batch_idx: int) -> None:
         imgs, tgts = batch
@@ -53,7 +61,10 @@ class IFCImageClassification(pl.LightningModule):
         scores = self.forward(inp_imgs)
         loss = self.loss_function(scores, tgts)
 
+        accuracy = self.accuracy_function(torch.argmax(scores, 1), tgts)
+
         self.log("test_loss", loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("test_accuracy", accuracy, on_step=False, on_epoch=True, prog_bar=True)
     
     def predict_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
         imgs, tgts = batch
