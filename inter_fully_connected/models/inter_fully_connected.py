@@ -6,7 +6,7 @@ import torch.nn.functional as F
 class InterFullyConnected(nn.Module):
     def __init__(self, features_size: int, class_number: int, hidden_multiplicator: float=2, *args, **kwargs) -> None:
         super(InterFullyConnected, self).__init__(*args, **kwargs)
-        
+         
         self.outputs_dim = int(features_size * hidden_multiplicator)
         self.linear = nn.Linear(in_features=self.outputs_dim, out_features=self.outputs_dim)
         self.batch_norm = nn.BatchNorm1d(num_features=self.outputs_dim)
